@@ -14,3 +14,6 @@ data_validation:
   cleaned_data_dir: artifacts/data_validation/cleaned_data.csv
 
   
+data_transformation:
+  root_dir: artifacts/data_transformation
+  data_path: artifacts/data_validation/cleaned_data.csv

@@ -15,3 +15,12 @@ class DataValidationConfig:
     unzip_data_dir: Path
     all_schema: dict
     cleaned_data_dir: Path
+
+@dataclass
+class DataTransformationConfig:
+    root_dir: Path
+    data_path: Path
+    test_size: float
+    random_state: int
+    target_column: str
+    numerical_columns: list

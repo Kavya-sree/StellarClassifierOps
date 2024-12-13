@@ -1,7 +1,7 @@
 from src.StellarClassifier.constants import *
 from src.StellarClassifier.utils.common import read_yaml, create_directories
 
-from src.StellarClassifier.entity.config_entity import (DataIngestionConfig, DataValidationConfig)
+from src.StellarClassifier.entity.config_entity import (DataIngestionConfig, DataValidationConfig, DataTransformationConfig)
 
 class ConfigurationManager:
     def __init__(self,
@@ -42,3 +42,19 @@ class ConfigurationManager:
         )
 
         return data_validation_config
+    
+
+    def get_data_transformation_config(self) -> DataTransformationConfig:
+        config = self.config.data_transformation
+        params = self.params.data_transformation
+        schema = self.schema
+        create_directories([config.root_dir])
+        data_transformation_config=DataTransformationConfig(
+            root_dir=config.root_dir,
+            data_path=config.data_path,
+            test_size= params.test_size,
+            random_state=params.random_state,
+            target_column= schema.TARGET_COLUMN['name'],
+            numerical_columns= [col for col, dtype in schema['COLUMNS'].items() if dtype == 'float64']
+        )
+        return data_transformation_config

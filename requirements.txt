@@ -3,6 +3,7 @@ mlflow
 notebook
 numpy
 scikit-learn
+imbalanced-learn
 matplotlib
 seaborn
 python-box
