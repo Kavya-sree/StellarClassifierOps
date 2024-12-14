@@ -1,3 +1,7 @@
 data_transformation:
   test_size: 0.25
   random_state: 42
+
+ElasticNet:
+  alpha: 0.2
+  l1_ratio: 0.1
