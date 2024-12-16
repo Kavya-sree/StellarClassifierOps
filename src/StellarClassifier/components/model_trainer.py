@@ -1,7 +1,7 @@
 import pandas as pd  
 import os
 from src.StellarClassifier import logger
-from sklearn.linear_model import ElasticNet
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder
 import joblib
 
@@ -25,7 +25,11 @@ class ModelTrainer:
         train_y = le.fit_transform(train_y)
         test_y = le.transform(test_y)
 
-        lr = ElasticNet(alpha=self.config.alpha, l1_ratio=self.config.l1_ratio, random_state=42)
-        lr.fit(train_x, train_y)
+        # Save the label encoder for use during evaluation
+        label_encoder_path = os.path.join(self.config.root_dir, "label_encoder.pkl")
+        joblib.dump(le, label_encoder_path)
 
-        joblib.dump(lr, os.path.join(self.config.root_dir, self.config.model_name))
+        classifier = RandomForestClassifier(n_estimators=self.config.n_estimators, random_state=42)
+        classifier.fit(train_x, train_y)
+
+        joblib.dump(classifier, os.path.join(self.config.root_dir, self.config.model_name))

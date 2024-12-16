@@ -3,6 +3,8 @@ from src.StellarClassifier.pipeline.data_ingestion_pipeline import DataIngestion
 from src.StellarClassifier.pipeline.data_validation_pipeline import DataValidationTrainingPipeline
 from src.StellarClassifier.pipeline.data_transfromation_pipeline import DataTransformationTrainingPipeline
 from src.StellarClassifier.pipeline.model_trainer_pipeline import ModelTrainerTrainingPipeline
+from src.StellarClassifier.pipeline.model_evaluation_pipeline import ModelEvaluationPipeline
+
 
 STAGE_NAME = "Data Ingestion stage"
 try:
@@ -39,6 +41,16 @@ try:
     logger.info(f">>>>> stage {STAGE_NAME} started <<<<<")
     model_trainer = ModelTrainerTrainingPipeline()
     model_trainer.initiate_model_training()
+    logger.info(f">>>>> stage {STAGE_NAME} completed <<<<<\n\nx==========x")
+except Exception as e:
+    logger.exception(e)
+    raise e
+
+STAGE_NAME = "Model Evaluation stage"
+try:
+    logger.info(f">>>>> stage {STAGE_NAME} started <<<<<")
+    model_evaluation = ModelEvaluationPipeline()
+    model_evaluation.initiate_model_evaluation()
     logger.info(f">>>>> stage {STAGE_NAME} completed <<<<<\n\nx==========x")
 except Exception as e:
     logger.exception(e)
