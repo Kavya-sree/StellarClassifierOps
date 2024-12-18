@@ -11,7 +11,6 @@ from src.StellarClassifier.utils.common import save_json
 from src.StellarClassifier.entity.config_entity import ModelEvaluationConfig
 
 
-
 class ModelEvaluation:
     def __init__(self, config: ModelEvaluationConfig):
         self.config=config

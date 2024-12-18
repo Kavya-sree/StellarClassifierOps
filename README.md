@@ -76,3 +76,31 @@ To run the app:
 ```bash
 python app.py
 ```
+
+## Experiment Tracking with Dagshub and MLflow
+
+This project integrates DagsHub and MLflow to track training experiments and manage model versions:
+
+1. Set up DagsHub Repository
+
+2. In the `model_evaluation.py` script, MLflow tracking details are configured as follows:
+
+```python
+# Hardcoded MLflow Details
+os.environ["MLFLOW_TRACKING_URI"] = "https://dagshub.com/<your-username>/<repo-name>.mlflow"
+os.environ["MLFLOW_TRACKING_USERNAME"] = "your-username"
+os.environ["MLFLOW_TRACKING_PASSWORD"] = "your password here"
+```
+
+3. Run the Project and log metrics:
+
+```bash
+python main.py
+```
+This script log metrics like accuracy, precision, recall, and F1 score to MLflow.
+
+4. To visualize experiments locally, use the MLflow UI:
+
+```bash
+mlflow ui
+```
