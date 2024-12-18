@@ -10,6 +10,10 @@ from pathlib import Path
 from src.StellarClassifier.utils.common import save_json
 from src.StellarClassifier.entity.config_entity import ModelEvaluationConfig
 
+#os.environ["MLFLOW_TRACKING_URI"]="https://dagshub.com/Kavya-sree/StellarClassifierOps.mlflow"
+#os.environ["MLFLOW_TRACKING_USERNAME"]="Kavya-sree"
+#os.environ["MLFLOW_TRACKING_PASSWORD"]="a51f068524ee98f5c2b17780f7fd183663953438"
+
 
 class ModelEvaluation:
     def __init__(self, config: ModelEvaluationConfig):
