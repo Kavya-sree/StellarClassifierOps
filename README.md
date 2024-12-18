@@ -6,17 +6,19 @@ This project focuses on building a machine learning pipeline to classify stars b
 
 This project focuses on classifying celestial objects—stars, galaxies, and quasars—using data from the Sloan Digital Sky Survey (SDSS) DR17. The classification leverages machine learning techniques to analyze and categorize spectral and photometric data, contributing to a deeper understanding of the universe's structure and evolution.
 
-## Astronomical Context
+## Background Info
 
-**What is Stellar Classification?**
+### What is Stellar Classification?**
 
 Stellar classification involves categorizing stars, galaxies, and quasars based on their spectral properties and physical characteristics. This helps in studying their composition, lifecycle, and role in cosmic evolution.
 
-**Relevance to Astronomy**
+**Astronomy** is the scientific study of the universe and of the objects that exist naturally in space.
 
-Stars: Understanding stellar types reveals information about their temperature, age, and chemical makeup.
-Galaxies: Studying galaxy types helps in exploring their formation, structure, and interaction in clusters.
-Quasars: High-energy active galactic nuclei, quasars, serve as probes of the distant universe.
+**Stars, Quasars, and Galaxies**
+The three important stellar objects in astronomy are stars, galaxies, and quasars. They are the fundamental building blocks of the universe.
+* Stars are massive luminous spheroids of plasma undergoing nuclear fusion and this process generates enormous amounts of energy, making them shine. They come in various types, sizes, and life cycles, from humble red dwarfs to explosive supernovae.
+* Galaxies are sprawling systems of stars, gas, dust, and dark matter bound together by gravity. They range from elegant spiral shapes, like our Milky Way, to colossal elliptical galaxies and irregular formations. Each galaxy is a cosmic metropolis housing millions to trillions of stars.
+* Quasars or Quasi-Stellar-Objects (QSO) are at the center of some distant galaxies. They derive their name from their initial starlike appearance when discovered in the late 1950s and early 1960s. It is a supermassive black hole that is growing rapidly by gorging on huge amounts of gas and they are extremely luminous.
  
 **About the SDSS DR17 Dataset**
 
@@ -39,3 +41,38 @@ The Sloan Digital Sky Survey (SDSS) is a comprehensive astronomical survey that 
 7. update the pipeline
 8. update the main.py
 9. update the app.py
+
+
+## Installation
+
+1. Clone the repository:
+
+```bash
+https://github.com/Kavya-sree/StellarClassifierOps.git
+```
+
+2. Navigate to the project directory:
+
+```bash
+cd StellarClassifierOps
+```
+
+3. Install the required dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+## How to run
+
+To train the model, use the following command:
+
+```bash
+python main.py
+```
+
+To run the app:
+
+```bash
+python app.py
+```
