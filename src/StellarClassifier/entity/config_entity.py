@@ -1,5 +1,8 @@
+
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Dict, Union, List  
+from hyperopt import hp
 
 @dataclass
 class DataIngestionConfig:
@@ -30,9 +33,17 @@ class ModelTrainerConfig:
     root_dir: Path
     train_data_path: Path
     test_data_path: Path
-    model_name: str
-    n_estimators: int
+    model_file_template: str  
+    label_encoder_path: str
+    model_type: str  
+    model_selection: str
+    hyperparameter_tuning: bool
+    param_space: Dict[str, Union[hp.choice, hp.uniform, hp.quniform, List[Union[str, float, int]]]]  # Corrected usage
+    cv: int  
+    random_state: int
+    mlflow_experiment_name: str
     target_column: str
+    max_evals: int
 
 @dataclass
 class ModelEvaluationConfig:

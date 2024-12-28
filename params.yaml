@@ -2,5 +2,33 @@ data_transformation:
   test_size: 0.25
   random_state: 42
 
+model_selection:
+  model_type: "XGBoost"  # Model type, could be "RandomForest", "XGBoost", or "GradientBoosting"
+  hyperparameter_tuning: true  # Enable Hyperparameter Tuning
+  cv: 5  # Number of Cross-Validation folds
+  random_state: 42
+  mlflow_experiment_name: StellarClassification_XGBoost_HyperparameterTuning  # MLFlow Experiment Name
+
+hyperopt:
+  max_evals: 50  # Number of Hyperopt evaluations
+  algo: tpe.suggest  # Hyperopt algorithm for optimization
+
 RandomForest:
-  n_estimators: 100
+  param_space:
+    n_estimators: {type: 'quniform', low: 50, high: 150, q: 10}  # Number of trees (discrete uniform distribution)
+    max_depth: {type: 'quniform', low: 5, high: 15, q: 1}  # Max depth of trees (uniform distribution)
+    min_samples_split: {type: 'quniform', low: 2, high: 8, q: 1}  # Min samples required to split a node
+    min_samples_leaf: {type: 'quniform', low: 1, high: 4, q: 1}  # Min samples required at leaf nodes
+
+XGBoost:
+  param_space:
+    n_estimators: {type: 'quniform', low: 50, high: 200, q: 10}  # Number of boosting rounds
+    max_depth: {type: 'uniform', low: 3, high: 10}  # Maximum depth of trees
+    learning_rate: {type: 'uniform', low: 0.01, high: 0.2}  # Learning rate
+    subsample: {type: 'uniform', low: 0.7, high: 1.0}  # Subsample ratio of the training instances
+
+GradientBoosting:
+  param_space:
+    n_estimators: {type: 'quniform', low: 50, high: 200, q: 10}  # Number of boosting stages
+    max_depth: {type: 'uniform', low: 3, high: 10}  # Maximum depth of trees
+    learning_rate: {type: 'uniform', low: 0.01, high: 0.2}  # Learning rate
