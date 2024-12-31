@@ -2,12 +2,17 @@ import os
 from dotenv import load_dotenv, find_dotenv
 
 import pandas as pd
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+import seaborn as sns
+import matplotlib.pyplot as plt
 from urllib.parse import urlparse
+from src.StellarClassifier.utils.common import save_json
+import tempfile
+
+
 import mlflow
 import joblib
 from pathlib import Path
-from src.StellarClassifier.utils.common import save_json
 from src.StellarClassifier.entity.config_entity import ModelEvaluationConfig
 
 # Locate and load .env file
@@ -53,26 +58,49 @@ class ModelEvaluation:
             mlflow.set_registry_uri(self.config.mlflow_uri)
             tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
 
-            with mlflow.start_run():
+            # Define a meaningful run name
+            run_name = f"Eval_{model_type}_max_evals_{self.config.max_evals}_cv_{self.config.cv}"
+
+            with mlflow.start_run(run_name=run_name):
                 # Predict the target values
                 predicted_qualities = model.predict(test_x)
                 (accuracy, precision, recall, f1) = self.eval_metrics(test_y_encoded, predicted_qualities)
 
                 # Save metrics locally in a JSON file
                 scores = {"accuracy": accuracy, "precision": precision, "recall": recall, "f1": f1}
-                save_json(path=Path(self.config.metric_file_name), data=scores)
+                save_json(path=Path(self.config.metric_file_template.format(model_type=model_type)), data=scores)
+
+
+                # Log metrics to MLflow
+                mlflow.log_metric("accuracy", accuracy)
+                mlflow.log_metric("precision", precision)
+                mlflow.log_metric("recall", recall)
+                mlflow.log_metric("f1", f1)
+
+                # Compute the confusion matrix
+                cm = confusion_matrix(test_y_encoded, predicted_qualities)
+
+                # Save confusion matrix as an image
+                plt.figure(figsize=(6, 5))
+                sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=label_encoder.classes_, yticklabels=label_encoder.classes_)
+                plt.title('Confusion Matrix')
+                plt.xlabel('Predicted Label')
+                plt.ylabel('True Label')
+
+                # Save the plot to a temporary file
+                with tempfile.NamedTemporaryFile(delete=False, suffix='.png') as tmpfile:
+                    plt.savefig(tmpfile.name)
+                    plt.close()
+                    # Log confusion matrix image to MLflow
+                    mlflow.log_artifact(tmpfile.name, "confusion_matrix")
 
                 # Extract hyperparameters used during the run
                 used_params = {}
                 if hasattr(model, "get_params"):
                     used_params = model.get_params()
 
-                # Log model parameters and metrics to MLflow
+                # Log model parameters to MLflow
                 mlflow.log_params(used_params)
-                mlflow.log_metric("accuracy", accuracy)
-                mlflow.log_metric("precision", precision)
-                mlflow.log_metric("recall", recall)
-                mlflow.log_metric("f1", f1)
 
                 # Log the model to MLFlow registry
                 if tracking_url_type_store != "file":
@@ -81,7 +109,7 @@ class ModelEvaluation:
                     mlflow.sklearn.log_model(model, "model")
 
                 print(f"Model evaluation metrics logged for {model_type}")
-        
+
         except Exception as e:
             print(f"Error during model evaluation: {str(e)}")
             raise e

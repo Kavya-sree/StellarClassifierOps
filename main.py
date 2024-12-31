@@ -1,7 +1,7 @@
 from src.StellarClassifier import logger
 from src.StellarClassifier.pipeline.data_ingestion_pipeline import DataIngestionTrainingPipeline
 from src.StellarClassifier.pipeline.data_validation_pipeline import DataValidationTrainingPipeline
-from src.StellarClassifier.pipeline.data_transfromation_pipeline import DataTransformationTrainingPipeline
+from src.StellarClassifier.pipeline.data_transformation_pipeline import DataTransformationTrainingPipeline
 from src.StellarClassifier.pipeline.model_trainer_pipeline import ModelTrainerTrainingPipeline
 from src.StellarClassifier.pipeline.model_evaluation_pipeline import ModelEvaluationPipeline
 

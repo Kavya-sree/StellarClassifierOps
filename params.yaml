@@ -3,11 +3,10 @@ data_transformation:
   random_state: 42
 
 model_selection:
-  model_type: "XGBoost"  # Model type, could be "RandomForest", "XGBoost", or "GradientBoosting"
+  model_type: "XGBoost"  # Model type, could be "RandomForest", "XGBoost", or "LightGBM"
   hyperparameter_tuning: true  # Enable Hyperparameter Tuning
-  cv: 5  # Number of Cross-Validation folds
+  cv: 10  # Number of Cross-Validation folds
   random_state: 42
-  mlflow_experiment_name: StellarClassification_XGBoost_HyperparameterTuning  # MLFlow Experiment Name
 
 hyperopt:
   max_evals: 50  # Number of Hyperopt evaluations
@@ -15,20 +14,30 @@ hyperopt:
 
 RandomForest:
   param_space:
-    n_estimators: {type: 'quniform', low: 50, high: 150, q: 10}  # Number of trees (discrete uniform distribution)
-    max_depth: {type: 'quniform', low: 5, high: 15, q: 1}  # Max depth of trees (uniform distribution)
-    min_samples_split: {type: 'quniform', low: 2, high: 8, q: 1}  # Min samples required to split a node
+    n_estimators: {type: 'quniform', low: 50, high: 100, q: 10}  # Number of trees (discrete uniform distribution)
+    max_depth: {type: 'quniform', low: 5, high: 9, q: 1}  # Max depth of trees (uniform distribution)
+    min_samples_split: {type: 'quniform', low: 2, high: 10, q: 1}  # Min samples required to split a node
     min_samples_leaf: {type: 'quniform', low: 1, high: 4, q: 1}  # Min samples required at leaf nodes
+    max_samples: {type: 'uniform', low: 0.5, high: 1.0}  
+
 
 XGBoost:
   param_space:
     n_estimators: {type: 'quniform', low: 50, high: 200, q: 10}  # Number of boosting rounds
-    max_depth: {type: 'uniform', low: 3, high: 10}  # Maximum depth of trees
-    learning_rate: {type: 'uniform', low: 0.01, high: 0.2}  # Learning rate
-    subsample: {type: 'uniform', low: 0.7, high: 1.0}  # Subsample ratio of the training instances
+    max_depth: {type: 'quniform', low: 3, high: 7, q: 1}  # Maximum depth of trees
+    learning_rate: {type: 'uniform', low: 0.05, high: 0.1}  # Learning rate
+    subsample: {type: 'uniform', low: 0.7, high: 0.9}  # Subsample ratio of the training instances
 
-GradientBoosting:
+
+LightGBM:
   param_space:
-    n_estimators: {type: 'quniform', low: 50, high: 200, q: 10}  # Number of boosting stages
-    max_depth: {type: 'uniform', low: 3, high: 10}  # Maximum depth of trees
-    learning_rate: {type: 'uniform', low: 0.01, high: 0.2}  # Learning rate
+    n_estimators: {type: 'quniform', low: 50, high: 150, q: 10}  # Number of boosting stages
+    max_depth: {type: 'quniform', low: 3, high: 9, q: 1}  # Maximum depth of trees (reduced max depth)
+    learning_rate: {type: 'uniform', low: 0.01, high: 0.1}  # Learning rate
+    subsample: {type: 'uniform', low: 0.7, high: 0.9}  # Fraction of data for training each tree
+    num_leaves: {type: 'quniform', low: 31, high: 127, q: 1}  # Number of leaves in each tree (reduced max leaves)
+    min_data_in_leaf: {type: 'quniform', low: 10, high: 40, q: 1}  # Minimum number of samples per leaf (reduced min samples)
+    feature_fraction: {type: 'uniform', low: 0.7, high: 1.0}  # Fraction of features used for building trees
+
+
+

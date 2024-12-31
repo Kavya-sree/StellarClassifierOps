@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 import pandas as pd
 
 
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, RobustScaler, StandardScaler
 from imblearn.over_sampling import SMOTE
 
 class DataTransformation:
@@ -44,6 +44,19 @@ class DataTransformation:
         logger.info("SMOTE applied successfully.")
         return resampled_data
 
+    
+    def compute_magnitude_diff(self, data):
+        logger.info("Computing magnitude differences...")
+
+        # Compute the magnitude differences for the required pairs
+        data['u_g'] = data['u'] - data['g']
+        data['g_r'] = data['g'] - data['r']
+        data['r_i'] = data['r'] - data['i']
+        data['i_z'] = data['i'] - data['z']
+
+        logger.info("Magnitude differences computed.")
+        return data
+    
     def normalize_data(self, data):
         logger.info("Normalizing data...")
         scaler = MinMaxScaler()

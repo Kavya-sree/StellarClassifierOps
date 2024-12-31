@@ -36,12 +36,10 @@ class ModelTrainerConfig:
     model_file_template: str  
     label_encoder_path: str
     model_type: str  
-    model_selection: str
     hyperparameter_tuning: bool
-    param_space: Dict[str, Union[hp.choice, hp.uniform, hp.quniform, List[Union[str, float, int]]]]  # Corrected usage
+    param_space: Dict[str, Union[hp.choice, hp.uniform, hp.quniform, List[Union[str, float, int]]]]  
     cv: int  
     random_state: int
-    mlflow_experiment_name: str
     target_column: str
     max_evals: int
 
@@ -50,8 +48,10 @@ class ModelEvaluationConfig:
     root_dir: Path
     test_data_path: Path
     label_encoder_path: Path
+    metric_file_template: str
     model_path: Path
     all_params: dict
-    metric_file_name: Path
     target_column: str
     mlflow_uri: str
+    max_evals: int
+    cv: int

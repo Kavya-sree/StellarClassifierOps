@@ -61,50 +61,30 @@ class ConfigurationManager:
 
         create_directories([config.root_dir])
 
-        model_type = self.params['model_selection']['model_type']
-        cv_folds = self.params['model_selection']['cv']
-        random_state = self.params['model_selection']['random_state']
-        mlflow_experiment_name = self.params['model_selection']['mlflow_experiment_name']
-        hyperparameter_tuning = self.params['model_selection']['hyperparameter_tuning']
-
-        hyperopt_params = self.params.get('hyperopt', {})
-        max_evals = hyperopt_params.get('max_evals', {})
-
-        # Fetch model selection and target column
-        model_selection = {
-            'model_type': model_type,
-            'cv': cv_folds,
-            'random_state': random_state,
-            'mlflow_experiment_name': mlflow_experiment_name,
-            'hyperparameter_tuning': hyperparameter_tuning
-        }
-        target_column = self.schema.TARGET_COLUMN['name'] 
-
+        model_type = self.params['model_selection'].get('model_type', 'RandomForest')
         param_space = self.params.get(model_type, {}).get('param_space', {})
+        max_evals = hyperopt_params.get('max_evals', 5)
 
-        label_encoder_path = config.get('label_encoder_path')
+        model_file_path = config.model_file_template.format(model_type=model_type)
+        label_encoder_path = config.label_encoder_path
 
-        # Print configuration details for clarity
-        print(f"Model type from params.yaml: {model_type}")
-        print(f"Cross-validation folds: {cv_folds}")
-        print(f"Hyperparameter tuning enabled: {hyperparameter_tuning}")
+        print(f"[DEBUG] Model type: {model_type}, Model path: {model_file_path}")
 
         return ModelTrainerConfig(
-            root_dir=self.config.artifacts_root,
+            root_dir=config.root_dir,
             model_type=model_type,
             train_data_path=config.train_data_path,
             test_data_path=config.test_data_path,
-            model_file_template=config.model_file_template,
+            model_file_template=model_file_path,
             label_encoder_path=label_encoder_path,
-            cv=cv_folds,
-            random_state=random_state,
-            mlflow_experiment_name=mlflow_experiment_name,
-            hyperparameter_tuning=hyperparameter_tuning,  
+            cv=self.params['model_selection']['cv'],
+            random_state=self.params['model_selection']['random_state'],
+            hyperparameter_tuning=self.params['model_selection']['hyperparameter_tuning'],
             max_evals=max_evals,
             param_space=param_space,
-            model_selection=model_selection,  
-            target_column=target_column
-            )
+            target_column=self.schema.TARGET_COLUMN['name'],
+        )
+
 
     def get_model_evaluation_config(self) -> ModelEvaluationConfig:
         config = self.config.model_evaluation
@@ -113,6 +93,10 @@ class ConfigurationManager:
 
         model_type = self.params.get('model_selection', {}).get('model_type', None)
 
+        # Retrieve max_evals and cv from ModelTrainerConfig or params
+        max_evals = self.params.get('hyperopt', {}).get('max_evals')
+        cv = self.params.get('model_selection', {}).get('cv')
+
         create_directories([config.root_dir])
 
         return ModelEvaluationConfig(
@@ -120,8 +104,10 @@ class ConfigurationManager:
         test_data_path=config.test_data_path,
         model_path=config.model_path.format(model_type=model_type),  # Dynamic model path based on model type
         label_encoder_path=config.label_encoder_path,
+        metric_file_template=config.metric_file_template.format(model_type=model_type),
         all_params= params,
-        metric_file_name=config.metric_file_name,
         target_column=schema.name,
+        max_evals=max_evals,
+        cv=cv,
         mlflow_uri="https://dagshub.com/Kavya-sree/StellarClassifierOps.mlflow"
         )

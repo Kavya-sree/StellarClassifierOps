@@ -27,9 +27,10 @@ The Sloan Digital Sky Survey (SDSS) is a comprehensive astronomical survey that 
 ## ML Pipeline
 
 1. Data Ingestion
-2. Data Transformation
-3. Model Trainer
-4. Model Evaluation
+2. Data Validation
+3. Data Transformation
+4. Model Trainer
+5. Model Evaluation
 
 ## Workflows
 1. update config.yaml
@@ -83,23 +84,29 @@ This project integrates DagsHub and MLflow to track training experiments and man
 
 1. Set up DagsHub Repository
 
-2. In the `model_evaluation.py` script, MLflow tracking details are configured as follows:
+2. Secure configuration with `.env`
+
+This project uses a `.env` file to securely manage MLflow tracking details
+* Create a `.env` file in the projects root directory.
+* Add the following tracking details in the `.env` file, replacing the placeholders with your actual values:
 
 ```python
-# Hardcoded MLflow Details
+.env
+#  MLflow Details
 os.environ["MLFLOW_TRACKING_URI"] = "https://dagshub.com/<your-username>/<repo-name>.mlflow"
 os.environ["MLFLOW_TRACKING_USERNAME"] = "your-username"
 os.environ["MLFLOW_TRACKING_PASSWORD"] = "your password here"
 ```
+* Ensure the `.env` file is included in `.gitignore` to prevent sensitive information from being commited to version control.
 
-3. Run the Project and log metrics:
+4. Run the Project and log metrics:
 
 ```bash
 python main.py
 ```
 This script log metrics like accuracy, precision, recall, and F1 score to MLflow.
 
-4. To visualize experiments locally, use the MLflow UI:
+5. To visualize experiments locally, use the MLflow UI:
 
 ```bash
 mlflow ui

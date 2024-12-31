@@ -1,5 +1,6 @@
 pandas
 mlflow
+lightgbm
 notebook
 numpy
 scikit-learn
