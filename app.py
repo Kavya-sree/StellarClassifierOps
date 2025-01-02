@@ -24,7 +24,7 @@ def training():
 def index():
     if request.method == 'POST':
         try:
-            # Get input values from the form
+            # Parse input values
             u = float(request.form['u'])
             g = float(request.form['g'])
             r = float(request.form['r'])
@@ -38,23 +38,25 @@ def index():
             r_i = r - i
             i_z = i - z
 
-            # Prepare the input data with derived features
-            data = [u_g, g_r, r_i, i_z, redshift]
+            # Prepare input data with raw photometric values and derived features
+            data = [u, g, r, i, z, u_g, g_r, r_i, i_z, redshift]
             data = np.array(data).reshape(1, -1)
 
             obj = PredictionPipeline()
-            predict = obj.predict(data)  # Returns a numerical class
+            predict = obj.predict(data)  # Numerical class prediction
 
-            # Decode the numerical prediction into the original label
+            # Decode prediction
             label = label_encoder.inverse_transform([int(predict[0])])[0]
 
             return render_template('results.html', prediction=label)
-        
-        except Exception as e: 
-            return f"An error occurred: {e}"
-        
-    else: 
-        return render_template('index.html')
+
+        except ValueError as e:
+            return f"Invalid input values: {e}", 400
+        except Exception as e:
+            return f"An unexpected error occurred: {e}", 500
+
+    return render_template('index.html')
+
     
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
