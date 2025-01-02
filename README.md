@@ -44,6 +44,16 @@ The Sloan Digital Sky Survey (SDSS) is a comprehensive astronomical survey that 
 9. update the app.py
 
 
+## Model Evaluation
+
+The model's performance is evaluated using key metrics to ensure its effectiveness in classifying stars, galaxies, and quasars. The metrics tracked include:
+
+- Accuracy: 96.7%
+- Precision: 96.7%
+- Recall: 96.7%
+- F1 Score: 96.6%
+
+
 ## Installation
 
 1. Clone the repository:
